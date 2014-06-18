@@ -1,7 +1,7 @@
 wireshark-atem-dissector
 ========================
 
-Wireshark dissector for protocol of Blackmagic Design ATEM video switcher.
+Wireshark dissector for Blackmagic Design ATEM video switcher protocol.
 
 ## Install
 
