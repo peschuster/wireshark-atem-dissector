@@ -188,8 +188,7 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 
     -- We start by adding our protocol to the dissection display tree.
     -- A call to tree:add() returns the child created, so we can add more "under" it using that return value.
-    -- The second argument is how much of the buffer/packet this added tree item covers/represents - in this
-    -- case (DNS protocol) that's the remainder of the packet.
+    -- The second argument is how much of the buffer/packet this added tree item covers/represents.
     local tree = root:add(atem_proto, tvbuf:range(0,pktlen))
 
     -- now let's check it's not too short
@@ -203,8 +202,7 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
         return
     end
 
-    -- now let's add the flags, which are all in the packet bytes at offset 2 of length 2
-    -- instead of calling this again and again, let's just use a variable
+    -- now let's add the flags
     local flagrange = tvbuf:range(0,1)
 
     -- for our flags field, we want a sub-tree
@@ -218,8 +216,6 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 	flag_tree:add(pf_flag_unknown2, flagrange)
 	flag_tree:add(pf_flag_unknown3, flagrange)
 
-    -- Now let's add our transaction id under our atem_proto protocol tree we just created.
-    -- The transaction id starts at offset 0, for 2 bytes length.
     tree:add(pf_packet_length, tvbuf:range(0,2))
     local packet_length =  tvbuf:range(1,1):uint() +(tvbuf:range(0,1):bitfield(5, 3) * 256)
     
@@ -231,10 +227,10 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 
     -- now add more to the main atem_proto tree
     tree:add(pf_session_id, tvbuf:range(2,2))
-    tree:add(pf_ack_packet_id, tvbuf:range(4,2))
+    tree:add(pf_ack_pkt_id, tvbuf:range(4,2))
     tree:add(pf_unknown1, tvbuf:range(6,2))
-    tree:add(pf_local_packet_id, tvbuf:range(8,2))
-    tree:add(pf_remote_packet_id, tvbuf:range(10,2))
+    tree:add(pf_local_pkt_id, tvbuf:range(8,2))
+    tree:add(pf_remote_pkt_id, tvbuf(10,2))
     
     local pos = ATEM_HDR_LEN
     local cmd_count = 0
@@ -287,4 +283,3 @@ DissectorTable.get("udp.port"):add(default_settings.port, atem_proto)
 -- We're done!
 -- our protocol (Proto) gets automatically registered after this script finishes loading
 ----------------------------------------
-
