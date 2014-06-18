@@ -59,13 +59,13 @@ local atem_proto = Proto("atem","BMD ATEM Protocol")
 ----------------------------------------
 -- multiple ways to do the same thing: create a protocol field (but not register it yet)
 -- the abbreviation should always have "<myproto>." before the specific abbreviation, to avoid collisions
-local pf_packet_length      	= ProtoField.new   ("Packet length", "atem.packet_length", ftypes.UINT16, nil, base.DEC, 0x07FF)
-local pf_flags              	= ProtoField.new   ("Command flags", "atem.flags", ftypes.UINT8, nil, base.HEX, 0xF8)
-local pf_session_id       	= ProtoField.new   ("Session id", "atem.session_id", ftypes.UINT16, nil, base.HEX)
-local pf_remote_pkt_id       = ProtoField.new   ("Remote packet id", "atem.remote_pkt_id", ftypes.UINT16, nil, base.HEX)
-local pf_local_pkt_id	        = ProtoField.new   ("Local packet id", "atem.local_pkt_id", ftypes.UINT16, nil, base.HEX)
-local pf_ack_pkt_id	   	= ProtoField.new   ("ACKed packet id", "atem.ack_pkt_id", ftypes.UINT16, nil, base.HEX)
-local pf_unknown1	   	= ProtoField.new   ("Unknown", "atem.unknown1", ftypes.UINT16, nil, base.HEX)
+local pf_packet_length        = ProtoField.new   ("Packet length", "atem.packet_length", ftypes.UINT16, nil, base.DEC, 0x07FF)
+local pf_flags                     = ProtoField.new   ("Command flags", "atem.flags", ftypes.UINT8, nil, base.HEX, 0xF8)
+local pf_session_id             = ProtoField.new   ("Session id", "atem.session_id", ftypes.UINT16, nil, base.HEX)
+local pf_switcher_pkt_id      = ProtoField.new   ("Switcher pkt id", "atem.switcher_pkt_id", ftypes.UINT16, nil, base.HEX)
+local pf_client_pkt_id         = ProtoField.new   ("Client pkt id", "atem.client_pkt_id", ftypes.UINT16, nil, base.HEX)
+local pf_ack_pkt_id            = ProtoField.new   ("ACKed pkt id", "atem.ack_pkt_id", ftypes.UINT16, nil, base.HEX)
+local pf_unknown1            = ProtoField.new   ("Unknown", "atem.unknown1", ftypes.UINT16, nil, base.HEX)
 
 local pf_cmd_length           = ProtoField.new   ("Command length", "atem.cmd.length", ftypes.UINT16, nil, base.DEC)
 local pf_cmd_name            = ProtoField.new   ("Command name", "atem.cmd.name", ftypes.STRING)
@@ -76,18 +76,18 @@ local pf_cmd_name            = ProtoField.new   ("Command name", "atem.cmd.name"
 -- again the following shows different ways of doing the same thing basically
 local pf_flag_ack              = ProtoField.new   ("ACK", "atem.flags.ack", ftypes.BOOLEAN, {"1","0"}, 8, 0x08)
 local pf_flag_init              = ProtoField.new   ("INIT", "atem.flags.init", ftypes.BOOLEAN, {"1","0"}, 8, 0x10)
-local pf_flag_unknown1    = ProtoField.new   ("RETRANSMISSION", "atem.flags.unknow1", ftypes.BOOLEAN, {"1","0"}, 8, 0x20)
-local pf_flag_unknown2    = ProtoField.new   ("HELLO", "atem.flags.unknow2", ftypes.BOOLEAN, {"1","0"}, 8, 0x40)
-local pf_flag_unknown3    = ProtoField.new   ("RESPONSE", "atem.flags.unknow3", ftypes.BOOLEAN, {"1","0"}, 8, 0x80)
+local pf_flag_retransmission    = ProtoField.new   ("RETRANSMISSION", "atem.flags.retransmission", ftypes.BOOLEAN, {"1","0"}, 8, 0x20)
+local pf_flag_hello    = ProtoField.new   ("HELLO", "atem.flags.hello", ftypes.BOOLEAN, {"1","0"}, 8, 0x40)
+local pf_flag_response    = ProtoField.new   ("RESPONSE", "atem.flags.response", ftypes.BOOLEAN, {"1","0"}, 8, 0x80)
 
 ----------------------------------------
 -- this actually registers the ProtoFields above, into our new Protocol
 -- in a real script I wouldn't do it this way; I'd build a table of fields programmatically
 -- and then set atem_proto.fields to it, so as to avoid forgetting a field
 atem_proto.fields = { 
-  pf_packet_length, pf_flags, pf_session_id, pf_remote_pkt_id, pf_local_pkt_id,  pf_ack_pkt_id, pf_unknown1, pf_flag_ack, 
+  pf_packet_length, pf_flags, pf_session_id, pf_switcher_pkt_id, pf_client_pkt_id,  pf_ack_pkt_id, pf_unknown1, pf_flag_ack, 
   pf_cmd_length, pf_cmd_name,
-  pf_flag_init, pf_flag_unknown1, pf_flag_unknown2, pf_flag_unknown3 
+  pf_flag_init, pf_flag_retransmission, pf_flag_hello, pf_flag_response 
 }
 
 ----------------------------------------
@@ -102,8 +102,8 @@ atem_proto.fields = {
 -- Before Wireshark version 1.11, you couldn't even do this concept (of using fields you just created).
 local packet_length_field	= Field.new("atem.packet_length")
 local session_id_field		= Field.new("atem.session_id")
-local remote_pkt_id_field	= Field.new("atem.remote_pkt_id")
-local local_pkt_id_field	= Field.new("atem.local_pkt_id")
+local switcher_pkt_id_field	= Field.new("atem.switcher_pkt_id")
+local client_pkt_id_field	= Field.new("atem.client_pkt_id")
 local ack_pkt_id_field		= Field.new("atem.ack_pkt_id")
 local unkown1_field		= Field.new("atem.unknown1")
 
@@ -212,9 +212,9 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
         -- let's add the type of message (query vs. response)
         flag_tree:add(pf_flag_ack, flagrange)
 	flag_tree:add(pf_flag_init, flagrange)
-	flag_tree:add(pf_flag_unknown1, flagrange)
-	flag_tree:add(pf_flag_unknown2, flagrange)
-	flag_tree:add(pf_flag_unknown3, flagrange)
+	flag_tree:add(pf_flag_retransmission, flagrange)
+	flag_tree:add(pf_flag_hello, flagrange)
+	flag_tree:add(pf_flag_response, flagrange)
 
     tree:add(pf_packet_length, tvbuf:range(0,2))
     local packet_length =  tvbuf:range(1,1):uint() +(tvbuf:range(0,1):bitfield(5, 3) * 256)
@@ -229,8 +229,8 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
     tree:add(pf_session_id, tvbuf:range(2,2))
     tree:add(pf_ack_pkt_id, tvbuf:range(4,2))
     tree:add(pf_unknown1, tvbuf:range(6,2))
-    tree:add(pf_local_pkt_id, tvbuf:range(8,2))
-    tree:add(pf_remote_pkt_id, tvbuf(10,2))
+    tree:add(pf_client_pkt_id, tvbuf:range(8,2))
+    tree:add(pf_switcher_pkt_id, tvbuf(10,2))
     
     local pos = ATEM_HDR_LEN
     local cmd_count = 0
