@@ -647,7 +647,9 @@ pf_fields["pf_flag_cmd_cssc_setmask22_luma"] = ProtoField.new ("Luma", "atem.cmd
 pf_fields["pf_flag_cmd_cssc_setmask22_direction"] = ProtoField.new ("Direction", "atem.cmd.cssc.setmask22.flags.direction", ftypes.BOOLEAN, {"On","Off"}, 20, 0x40000)
 pf_fields["pf_flag_cmd_cssc_setmask22_altitude"] = ProtoField.new ("Altitude", "atem.cmd.cssc.setmask22.flags.altitude", ftypes.BOOLEAN, {"On","Off"}, 20, 0x80000)
 
-pf_fields["pf_field_box"]	= ProtoField.new  ("Box", "atem.field.box", ftypes.UINT8, nil, base.DEC)
+VALS["VALS_BOX"] = {[0] = "Box 1", [1] = "Box 2", [2] = "Box 3", [3] = "Box 4"}
+pf_fields["pf_field_box"]	= ProtoField.new  ("Box", "atem.field.box", ftypes.UINT8, VALS["VALS_BOX"], base.DEC)
+
 VALS["VALS_INPUTSOURCE0"] = {[0] = "Black", [1] = "Input 1", [2] = "Input 2", [3] = "Input 3", [4] = "Input 4", [5] = "Input 5", [6] = "Input 6", [7] = "Input 7", [8] = "Input 8", [9] = "Input 9", [10] = "Input 10", [11] = "Input 11", [12] = "Input 12", [13] = "Input 13", [14] = "Input 14", [15] = "Input 15", [16] = "Input 16", [17] = "Input 17", [18] = "Input 18", [19] = "Input 19", [20] = "Input 20", [1000] = "Color Bars", [2001] = "Color 1", [2002] = "Color 2", [3010] = "Media Player 1", [3011] = "Media Player 1 Key", [3020] = "Media Player 2", [3021] = "Media Player 2 Key", [4010] = "Key 1 Mask", [4020] = "Key 2 Mask", [4030] = "Key 3 Mask", [4040] = "Key 4 Mask", [5010] = "DSK 1 Mask", [5020] = "DSK 2 Mask", [6000] = "Super Source", [7001] = "Clean Feed 1", [7002] = "Clean Feed 2", [8001] = "Auxilary 1", [8002] = "Auxilary 2", [8003] = "Auxilary 3", [8004] = "Auxilary 4", [8005] = "Auxilary 5", [8006] = "Auxilary 6", [10010] = "ME 1 Prog", [10011] = "ME 1 Prev", [10020] = "ME 2 Prog", [10021] = "ME 2 Prev"}
 pf_fields["pf_field_inputsource0"]	= ProtoField.new  ("Input Source", "atem.field.inputsource0", ftypes.UINT16, VALS["VALS_INPUTSOURCE0"], base.DEC)
 
