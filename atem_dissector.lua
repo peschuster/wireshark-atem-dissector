@@ -56,8 +56,6 @@ assert(ProtoExpert.new, "Wireshark does not have the ProtoExpert class, so it's 
 -- creates a Proto object, but doesn't register it yet
 local atem_proto = Proto("atem","BMD ATEM Protocol")
 
-local VALS_YESNO = {[0] = "NO", [1] = "YES"}
-local VALS_SS_STYLE = {[0] = "Mix", [1] = "Dip", [2] = "Wipe", [3] = "DVE", [4] = "Sting"}
 ----------------------------------------
 -- multiple ways to do the same thing: create a protocol field (but not register it yet)
 -- the abbreviation should always have "<myproto>." before the specific abbreviation, to avoid collisions
