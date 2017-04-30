@@ -3,6 +3,8 @@ wireshark-atem-dissector
 
 Wireshark dissector for Blackmagic Design ATEM video switcher protocol.
 
+Protocol information based on http://skaarhoj.com/fileadmin/BMDPROTOCOL.html
+
 ## Install
 
 - Copy `atem_dissector.lua` to `C:\Users\<UserName>\AppData\Roaming\Wireshark\plugins`
