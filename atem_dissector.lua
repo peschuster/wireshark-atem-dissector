@@ -1668,70 +1668,229 @@ elseif (cmd_name == "CCdo") then
     cmd_tree:add(pf_fields["pf_field_setmask17"], tvbuf:range(pos+8, 1))
     cmd_tree:add(pf_fields["pf_field_input1"], tvbuf:range(pos+9, 1))
     cmd_tree:add(pf_fields["pf_field_adjustmentdomain"], tvbuf:range(pos+10, 1))
-    cmd_tree:add(pf_fields["pf_cmd_ccdo_lensfeature0"], tvbuf:range(pos+11, 1))
-    cmd_tree:add(pf_fields["pf_cmd_ccdo_camerafeature0"], tvbuf:range(pos+11, 1))
-    cmd_tree:add(pf_fields["pf_field_chipfeature"], tvbuf:range(pos+11, 1))
+    -- Adjustment Domain = 0
+    if (tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_cmd_ccdo_lensfeature0"], tvbuf:range(pos+11, 1))
+    end
+    -- Adjustment Domain = 1
+    if (tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_cmd_ccdo_camerafeature0"], tvbuf:range(pos+11, 1))
+    end
+    -- Adjustment Domain = 8
+    if (tvbuf:range(pos+10, 1):uint() == 8) then
+        cmd_tree:add(pf_fields["pf_field_chipfeature"], tvbuf:range(pos+11, 1))
+    end
     cmd_tree:add(pf_fields["pf_cmd_ccdo_available"], tvbuf:range(pos+12, 1))
     cmd_tree:add(pf_fields["pf_field_unknown2"], tvbuf:range(pos+13, 3))
 elseif (cmd_name == "CCdP") then
     cmd_tree:add(pf_fields["pf_field_input1"], tvbuf:range(pos+8, 1))
     cmd_tree:add(pf_fields["pf_field_adjustmentdomain"], tvbuf:range(pos+9, 1))
-    cmd_tree:add(pf_fields["pf_field_lensfeature1"], tvbuf:range(pos+10, 1))
-    cmd_tree:add(pf_fields["pf_field_camerafeature1"], tvbuf:range(pos+10, 1))
-    cmd_tree:add(pf_fields["pf_field_chipfeature"], tvbuf:range(pos+10, 1))
+    -- Adjustment Domain = 0
+    if (tvbuf:range(pos+9, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_lensfeature1"], tvbuf:range(pos+10, 1))
+    end
+    -- Adjustment Domain = 1
+    if (tvbuf:range(pos+9, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_camerafeature1"], tvbuf:range(pos+10, 1))
+    end
+    -- Adjustment Domain = 8
+    if (tvbuf:range(pos+9, 1):uint() == 8) then
+        cmd_tree:add(pf_fields["pf_field_chipfeature"], tvbuf:range(pos+10, 1))
+    end
     cmd_tree:add(pf_fields["pf_cmd_ccdp_unknown4"], tvbuf:range(pos+11, 13))
-    cmd_tree:add(pf_fields["pf_field_iris"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_focus"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_gain1"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_whitebalance"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_zoomspeed"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_liftr"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_gammar"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_gainr"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_lummix"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_hue1"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_shutter"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_liftg"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_gammag"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_gaing"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_contrast"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_saturation1"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_liftb"], tvbuf:range(pos+28, 2))
-    cmd_tree:add(pf_fields["pf_field_gammab"], tvbuf:range(pos+28, 2))
-    cmd_tree:add(pf_fields["pf_field_gainb"], tvbuf:range(pos+28, 2))
-    cmd_tree:add(pf_fields["pf_field_lifty"], tvbuf:range(pos+30, 2))
-    cmd_tree:add(pf_fields["pf_field_gammay"], tvbuf:range(pos+30, 2))
-    cmd_tree:add(pf_fields["pf_field_gainy"], tvbuf:range(pos+30, 2))
+    -- Adjustment Domain = 0 and Lens feature = 3
+    if (tvbuf:range(pos+9, 1):uint() == 0 and tvbuf:range(pos+10, 1):uint() == 3) then
+        cmd_tree:add(pf_fields["pf_field_iris"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 0 and Lens feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 0 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_focus"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 1 and Camera feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 1 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gain1"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 1 and Camera feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 1 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_whitebalance"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 0 and Lens feature = 9
+    if (tvbuf:range(pos+9, 1):uint() == 0 and tvbuf:range(pos+10, 1):uint() == 9) then
+        cmd_tree:add(pf_fields["pf_field_zoomspeed"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_liftr"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gammar"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_gainr"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 5
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 5) then
+        cmd_tree:add(pf_fields["pf_field_lummix"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 6
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 6) then
+        cmd_tree:add(pf_fields["pf_field_hue1"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 1 and Camera feature = 5
+    if (tvbuf:range(pos+9, 1):uint() == 1 and tvbuf:range(pos+10, 1):uint() == 5) then
+        cmd_tree:add(pf_fields["pf_field_shutter"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_liftg"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gammag"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_gaing"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 4
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 4) then
+        cmd_tree:add(pf_fields["pf_field_contrast"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 6
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 6) then
+        cmd_tree:add(pf_fields["pf_field_saturation1"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_liftb"], tvbuf:range(pos+28, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gammab"], tvbuf:range(pos+28, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_gainb"], tvbuf:range(pos+28, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_lifty"], tvbuf:range(pos+30, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gammay"], tvbuf:range(pos+30, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_gainy"], tvbuf:range(pos+30, 2))
+    end
 elseif (cmd_name == "CCmd") then
     cmd_tree:add(pf_fields["pf_field_input1"], tvbuf:range(pos+8, 1))
     cmd_tree:add(pf_fields["pf_field_adjustmentdomain"], tvbuf:range(pos+9, 1))
-    cmd_tree:add(pf_fields["pf_field_lensfeature1"], tvbuf:range(pos+10, 1))
-    cmd_tree:add(pf_fields["pf_field_camerafeature1"], tvbuf:range(pos+10, 1))
-    cmd_tree:add(pf_fields["pf_field_chipfeature"], tvbuf:range(pos+10, 1))
+    -- Adjustment Domain = 0
+    if (tvbuf:range(pos+9, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_lensfeature1"], tvbuf:range(pos+10, 1))
+    end
+    -- Adjustment Domain = 1
+    if (tvbuf:range(pos+9, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_camerafeature1"], tvbuf:range(pos+10, 1))
+    end
+    -- Adjustment Domain = 8
+    if (tvbuf:range(pos+9, 1):uint() == 8) then
+        cmd_tree:add(pf_fields["pf_field_chipfeature"], tvbuf:range(pos+10, 1))
+    end
     cmd_tree:add(pf_fields["pf_cmd_ccmd_relative"], tvbuf:range(pos+11, 1))
     cmd_tree:add(pf_fields["pf_field_unknown5"], tvbuf:range(pos+12, 12))
-    cmd_tree:add(pf_fields["pf_field_iris"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_focus"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_gain1"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_whitebalance"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_zoomspeed"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_liftr"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_gammar"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_gainr"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_lummix"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_hue1"], tvbuf:range(pos+24, 2))
-    cmd_tree:add(pf_fields["pf_field_shutter"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_liftg"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_gammag"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_gaing"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_contrast"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_saturation1"], tvbuf:range(pos+26, 2))
-    cmd_tree:add(pf_fields["pf_field_liftb"], tvbuf:range(pos+28, 2))
-    cmd_tree:add(pf_fields["pf_field_gammab"], tvbuf:range(pos+28, 2))
-    cmd_tree:add(pf_fields["pf_field_gainb"], tvbuf:range(pos+28, 2))
-    cmd_tree:add(pf_fields["pf_field_lifty"], tvbuf:range(pos+30, 2))
-    cmd_tree:add(pf_fields["pf_field_gammay"], tvbuf:range(pos+30, 2))
-    cmd_tree:add(pf_fields["pf_field_gainy"], tvbuf:range(pos+30, 2))
+    -- Adjustment Domain = 0 and Lens feature = 3
+    if (tvbuf:range(pos+9, 1):uint() == 0 and tvbuf:range(pos+10, 1):uint() == 3) then
+        cmd_tree:add(pf_fields["pf_field_iris"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 0 and Lens feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 0 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_focus"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 1 and Camera feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 1 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gain1"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 1 and Camera feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 1 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_whitebalance"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 0 and Lens feature = 9
+    if (tvbuf:range(pos+9, 1):uint() == 0 and tvbuf:range(pos+10, 1):uint() == 9) then
+        cmd_tree:add(pf_fields["pf_field_zoomspeed"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_liftr"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gammar"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_gainr"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 5
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 5) then
+        cmd_tree:add(pf_fields["pf_field_lummix"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 6
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 6) then
+        cmd_tree:add(pf_fields["pf_field_hue1"], tvbuf:range(pos+24, 2))
+    end
+    -- Adjustment Domain = 1 and Camera feature = 5
+    if (tvbuf:range(pos+9, 1):uint() == 1 and tvbuf:range(pos+10, 1):uint() == 5) then
+        cmd_tree:add(pf_fields["pf_field_shutter"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_liftg"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gammag"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_gaing"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 4
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 4) then
+        cmd_tree:add(pf_fields["pf_field_contrast"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 6
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 6) then
+        cmd_tree:add(pf_fields["pf_field_saturation1"], tvbuf:range(pos+26, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_liftb"], tvbuf:range(pos+28, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gammab"], tvbuf:range(pos+28, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_gainb"], tvbuf:range(pos+28, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 0
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 0) then
+        cmd_tree:add(pf_fields["pf_field_lifty"], tvbuf:range(pos+30, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 1
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 1) then
+        cmd_tree:add(pf_fields["pf_field_gammay"], tvbuf:range(pos+30, 2))
+    end
+    -- Adjustment Domain = 8 and Chip feature = 2
+    if (tvbuf:range(pos+9, 1):uint() == 8 and tvbuf:range(pos+10, 1):uint() == 2) then
+        cmd_tree:add(pf_fields["pf_field_gainy"], tvbuf:range(pos+30, 2))
+    end
 elseif (cmd_name == "RCPS") then
     cmd_tree:add(pf_fields["pf_field_mediaplayer"], tvbuf:range(pos+8, 1))
     cmd_tree:add(pf_fields["pf_field_playing"], tvbuf:range(pos+9, 1))
