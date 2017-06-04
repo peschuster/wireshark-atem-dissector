@@ -1950,8 +1950,10 @@ elseif (cmd_name == "MPfe") then
     cmd_tree:add(pf_fields["pf_field_isused"], tvbuf:range(pos+12, 1))
     cmd_tree:add(pf_fields["pf_cmd_mpfe_hashofstill"], tvbuf:range(pos+13, 16))
     cmd_tree:add(pf_fields["pf_field_unknown1"], tvbuf:range(pos+29, 1))
-    cmd_tree:add(pf_fields["pf_cmd_mpfe_filenamestringlength"], tvbuf:range(pos+31, 1))
-    cmd_tree:add(pf_fields["pf_field_filename"], tvbuf:range(pos+32, 16))
+    cmd_tree:add(pf_fields["pf_cmd_mpfe_filenamestringlength"], tvbuf:range(pos+31, 1))	
+    if (tvbuf:range(pos+31, 1):uint() > 0) then
+		cmd_tree:add(pf_fields["pf_field_filename"], tvbuf:range(pos+32, tvbuf:range(pos+31, 1):uint()))
+	end
 elseif (cmd_name == "MRPr") then
     local cmd_mrpr_state_tree = cmd_tree:add(pf_fields["pf_cmd_mrpr_state"], tvbuf:range(pos+8, 1))
     cmd_mrpr_state_tree:add(pf_fields["pf_flag_cmd_mrpr_state_running"], tvbuf:range(pos+8, 1))
@@ -1973,8 +1975,14 @@ elseif (cmd_name == "MPrp") then
     cmd_tree:add(pf_fields["pf_field_unknown1"], tvbuf:range(pos+11, 1))
     cmd_tree:add(pf_fields["pf_field_namestringlength"], tvbuf:range(pos+12, 2))
     cmd_tree:add(pf_fields["pf_field_descriptionstringlength"], tvbuf:range(pos+14, 2))
-    cmd_tree:add(pf_fields["pf_cmd_mprp_name1"], tvbuf:range(pos+16, 10))
-    cmd_tree:add(pf_fields["pf_field_description"], tvbuf:range(pos+26, 1))
+	
+    if (tvbuf:range(pos+12, 2):uint() > 0) then
+		cmd_tree:add(pf_fields["pf_cmd_mprp_name1"], tvbuf:range(pos+16, tvbuf:range(pos+12, 2):uint()))
+	end
+	
+    if (tvbuf:range(pos+14, 2):uint() > 0) then
+		cmd_tree:add(pf_fields["pf_field_description"], tvbuf:range(pos+16+tvbuf:range(pos+12, 2):uint(), tvbuf:range(pos+14, 2):uint()))
+	end
 elseif (cmd_name == "CMPr") then
     local cmd_cmpr_setmask21_tree = cmd_tree:add(pf_fields["pf_cmd_cmpr_setmask21"], tvbuf:range(pos+8, 1))
     cmd_cmpr_setmask21_tree:add(pf_fields["pf_flag_cmd_cmpr_setmask21_name"], tvbuf:range(pos+8, 1))
@@ -1983,15 +1991,27 @@ elseif (cmd_name == "CMPr") then
     cmd_tree:add(pf_fields["pf_field_index0"], tvbuf:range(pos+10, 2))
     cmd_tree:add(pf_fields["pf_field_namestringlength"], tvbuf:range(pos+12, 2))
     cmd_tree:add(pf_fields["pf_field_descriptionstringlength"], tvbuf:range(pos+14, 2))
-    cmd_tree:add(pf_fields["pf_field_name2"], tvbuf:range(pos+16, 1))
-    cmd_tree:add(pf_fields["pf_field_description"], tvbuf:range(pos+17, 1))
+	
+    if (tvbuf:range(pos+12, 2):uint() > 0) then
+		cmd_tree:add(pf_fields["pf_field_name2"], tvbuf:range(pos+16, tvbuf:range(pos+12, 2):uint()))
+	end
+	
+    if (tvbuf:range(pos+14, 2):uint() > 0) then
+		cmd_tree:add(pf_fields["pf_field_description"], tvbuf:range(pos+16+tvbuf:range(pos+12, 2):uint(), tvbuf:range(pos+14, 2):uint()))
+	end
 elseif (cmd_name == "MSRc") then
     cmd_tree:add(pf_fields["pf_field_unknown1"], tvbuf:range(pos+8, 1))
     cmd_tree:add(pf_fields["pf_cmd_msrc_index1"], tvbuf:range(pos+9, 1))
     cmd_tree:add(pf_fields["pf_field_namestringlength"], tvbuf:range(pos+10, 2))
     cmd_tree:add(pf_fields["pf_field_descriptionstringlength"], tvbuf:range(pos+12, 2))
-    cmd_tree:add(pf_fields["pf_field_name2"], tvbuf:range(pos+14, 1))
-    cmd_tree:add(pf_fields["pf_field_description"], tvbuf:range(pos+15, 1))
+	
+    if (tvbuf:range(pos+10, 2):uint() > 0) then
+		cmd_tree:add(pf_fields["pf_field_name2"], tvbuf:range(pos+14, tvbuf:range(pos+10, 2):uint()))
+	end
+	
+    if (tvbuf:range(pos+12, 2):uint() > 0) then
+		cmd_tree:add(pf_fields["pf_field_description"], tvbuf:range(pos+14+tvbuf:range(pos+10, 2):uint(), tvbuf:range(pos+12, 2):uint()))
+	end
 elseif (cmd_name == "MSlp") then
     cmd_tree:add(pf_fields["pf_field_unknown1"], tvbuf:range(pos+8, 1))
     cmd_tree:add(pf_fields["pf_field_frames"], tvbuf:range(pos+10, 2))
