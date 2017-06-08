@@ -7,7 +7,7 @@ Protocol information based on http://skaarhoj.com/fileadmin/BMDPROTOCOL.html
 
 ## Install
 
-- Copy `atem_dissector.lua` to `C:\Users\<UserName>\AppData\Roaming\Wireshark\plugins`
+- Copy `atem_dissector.lua` to `C:\Users\<UserName>\AppData\Roaming\Wireshark\plugins` (or `%APPDATA%\Wireshark\plugins`)
 - Start Wireshark
 
 ### Required Wireshark Version
