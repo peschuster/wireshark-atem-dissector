@@ -750,6 +750,131 @@ pf_fields["pf_cmd_time_second"]	= ProtoField.new  ("Second", "atem.cmd.time.seco
 pf_fields["pf_cmd_time_frame"]	= ProtoField.new  ("Frame", "atem.cmd.time.frame", ftypes.UINT8, nil, base.DEC)
 
 
+local cmd_labels = {}
+cmd_labels["_ver"] = "Protocol Version"
+cmd_labels["_pin"] = "Product Id"
+cmd_labels["Warn"] = "Warning"
+cmd_labels["_top"] = "Topology"
+cmd_labels["_MeC"] = "Mix Effect Config"
+cmd_labels["_mpl"] = "Media Players"
+cmd_labels["_MvC"] = "Multi View Config"
+cmd_labels["_SSC"] = "Super Source Config"
+cmd_labels["_TlC"] = "Tally Channel Config"
+cmd_labels["_AMC"] = "Audio Mixer Config"
+cmd_labels["_VMC"] = "Video Mixer Config"
+cmd_labels["_MAC"] = "Macro Pool"
+cmd_labels["Powr"] = "Power"
+cmd_labels["DcOt"] = "Down Converter"
+cmd_labels["CDcO"] = "Down Converter"
+cmd_labels["VidM"] = "Video Mode"
+cmd_labels["CVdM"] = "Video Mode"
+cmd_labels["InPr"] = "Input Properties"
+cmd_labels["CInL"] = "Input Properties"
+cmd_labels["MvPr"] = "Multi Viewer Properties"
+cmd_labels["CMvP"] = "Multi Viewer Properties"
+cmd_labels["MvIn"] = "Multi Viewer Input"
+cmd_labels["CMvI"] = "Multi Viewer Input"
+cmd_labels["PrgI"] = "Program Input"
+cmd_labels["CPgI"] = "Program Input"
+cmd_labels["PrvI"] = "Preview Input"
+cmd_labels["CPvI"] = "Preview Input"
+cmd_labels["DCut"] = "Cut"
+cmd_labels["DAut"] = "Auto"
+cmd_labels["TrSS"] = "Transition"
+cmd_labels["CTTp"] = "Transition"
+cmd_labels["TrPr"] = "Transition Preview"
+cmd_labels["CTPr"] = "Transition Preview"
+cmd_labels["TrPs"] = "Transition Position"
+cmd_labels["CTPs"] = "Transition Position"
+cmd_labels["TMxP"] = "Transition Mix"
+cmd_labels["CTMx"] = "Transition Mix"
+cmd_labels["TDpP"] = "Transition Dip"
+cmd_labels["CTDp"] = "Transition Dip"
+cmd_labels["TWpP"] = "Transition Wipe"
+cmd_labels["CTWp"] = "Transition Wipe"
+cmd_labels["TDvP"] = "Transition DVE"
+cmd_labels["CTDv"] = "Transition DVE"
+cmd_labels["TStP"] = "Transition Stinger"
+cmd_labels["CTSt"] = "Transition Stinger"
+cmd_labels["KeOn"] = "Keyer On Air"
+cmd_labels["CKOn"] = "Keyer On Air"
+cmd_labels["KeBP"] = "Keyer Base"
+cmd_labels["CKTp"] = "Key Type"
+cmd_labels["CKMs"] = "Key Mask"
+cmd_labels["CKeF"] = "Key Fill"
+cmd_labels["CKeC"] = "Key Cut"
+cmd_labels["KeLm"] = "Key Luma"
+cmd_labels["CKLm"] = "Key Luma"
+cmd_labels["KeCk"] = "Key Chroma"
+cmd_labels["CKCk"] = "Key Chroma"
+cmd_labels["KePt"] = "Key Pattern"
+cmd_labels["CKPt"] = "Key Pattern"
+cmd_labels["KeDV"] = "Key DVE"
+cmd_labels["CKDV"] = "Key DVE"
+cmd_labels["KeFS"] = "Keyer Fly"
+cmd_labels["SFKF"] = "Keyer Fly"
+cmd_labels["RFlK"] = "Run Flying Key"
+cmd_labels["KKFP"] = "Keyer Fly Key Frame"
+cmd_labels["DskB"] = "Downstream Keyer"
+cmd_labels["CDsF"] = "Downstream Keyer"
+cmd_labels["CDsC"] = "Downstream Keyer"
+cmd_labels["DskP"] = "Downstream Keyer"
+cmd_labels["CDsT"] = "Downstream Keyer"
+cmd_labels["CDsR"] = "Downstream Keyer"
+cmd_labels["CDsG"] = "Downstream Keyer"
+cmd_labels["CDsM"] = "Downstream Keyer"
+cmd_labels["DDsA"] = "Downstream Keyer Auto"
+cmd_labels["DskS"] = "Downstream Keyer"
+cmd_labels["CDsL"] = "Downstream Keyer"
+cmd_labels["FtbP"] = "Fade-To-Black"
+cmd_labels["FtbC"] = "Fade-To-Black"
+cmd_labels["FtbS"] = "Fade-To-Black State"
+cmd_labels["FtbA"] = "Fade-To-Black"
+cmd_labels["ColV"] = "Color Generator"
+cmd_labels["CClV"] = "Color Generator"
+cmd_labels["AuxS"] = "Aux Source"
+cmd_labels["CAuS"] = "Aux Source"
+cmd_labels["CCdo"] = "Camera Control Options(?)"
+cmd_labels["CCdP"] = "Camera Control"
+cmd_labels["CCmd"] = "Camera Control"
+cmd_labels["RCPS"] = "Clip Player"
+cmd_labels["SCPS"] = "Clip Player"
+cmd_labels["MPCE"] = "Media Player Source"
+cmd_labels["MPSS"] = "Media Player Source"
+cmd_labels["MPSp"] = "Media Pool Storage"
+cmd_labels["CMPS"] = "Media Pool Storage"
+cmd_labels["MPCS"] = "Media Player Clip Source"
+cmd_labels["MPAS"] = "Media Player Audio Source"
+cmd_labels["MPfe"] = "Media Player Still Files"
+cmd_labels["MRPr"] = "Macro Run Status"
+cmd_labels["MAct"] = "Macro Action"
+cmd_labels["MRCP"] = "Macro Run Change Properties"
+cmd_labels["MPrp"] = "Macro Properties"
+cmd_labels["CMPr"] = "Change Macro Properties"
+cmd_labels["MSRc"] = "Macro Start Recording"
+cmd_labels["MSlp"] = "Macro Add Pause"
+cmd_labels["MRcS"] = "Macro Recording Status"
+cmd_labels["SSrc"] = "Super Source"
+cmd_labels["CSSc"] = "Super Source"
+cmd_labels["SSBP"] = "Super Source Box Parameters"
+cmd_labels["CSBP"] = "Super Source Box Parameters"
+cmd_labels["AMIP"] = "Audio Mixer Input"
+cmd_labels["CAMI"] = "Audio Mixer Input"
+cmd_labels["AMMO"] = "Audio Mixer Master"
+cmd_labels["CAMM"] = "Audio Mixer Master"
+cmd_labels["AMmO"] = "Audio Mixer Monitor"
+cmd_labels["CAMm"] = "Audio Mixer Monitor"
+cmd_labels["SALN"] = "Audio Levels"
+cmd_labels["AMLv"] = "Audio Mixer Levels"
+cmd_labels["RAMP"] = "Reset Audio Mixer Peaks"
+cmd_labels["AMTl"] = "Audio Mixer Tally"
+cmd_labels["TlIn"] = "Tally By Index"
+cmd_labels["TlSr"] = "Tally By Source"
+cmd_labels["Time"] = "Last State Change Time Code"
+cmd_labels["SRsv"] = "Save Startup State"
+cmd_labels["SRcl"] = "Clear Startup State"
+
+
 ----------------------------------------
 -- this actually registers the ProtoFields above, into our new Protocol
 -- in a real script I wouldn't do it this way; I'd build a table of fields programmatically
@@ -877,8 +1002,8 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
     local flag_tree = tree:add(pf_flags, flagrange)
         -- I'm indenting this for clarity, because it's adding to the flag's child-tree
 
-        -- let's add the type of message (query vs. response)
-        flag_tree:add(pf_flag_ack, flagrange)
+	-- let's add the type of message (query vs. response)
+	flag_tree:add(pf_flag_ack, flagrange)
 	flag_tree:add(pf_flag_init, flagrange)
 	flag_tree:add(pf_flag_retransmission, flagrange)
 	flag_tree:add(pf_flag_hello, flagrange)
@@ -912,8 +1037,13 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 	while (pktlen_remaining > 0) do
 	    local cmd_name = tvbuf:range(pos + 4, 4):string()
 	    local cmd_length = tvbuf:range(pos, 2):uint()
+		
+		local cmd_label = cmd_labels[cmd_name]
+		if (cmd_label ~= nil) then
+			cmd_label = "(" .. cmd_label .. ")"
+		end
 	    
-	    local cmd_tree = commands_tree:add(cmd_name, tvbuf:range(pos, cmd_length))
+	    local cmd_tree = commands_tree:add(cmd_name, tvbuf:range(pos, cmd_length), nil, cmd_label)
 	    
 	    cmd_tree:add(pf_cmd_length, tvbuf:range(pos, 2))
 	    cmd_tree:add(pf_cmd_name, tvbuf:range(pos + 4, 4))
