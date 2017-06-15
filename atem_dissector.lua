@@ -1080,6 +1080,7 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 	
 	local pos = ATEM_HDR_LEN
 	local cmd_count = 0
+	local cmd_name = ""
 	
 	if (pktlen > 12 and tvbuf:range(0,1):bitfield(3, 1) == 0) then
 		local commands_tree = tree:add("Commands")
@@ -1088,7 +1089,7 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 		local pktlen_remaining = pktlen - pos
 	
 	while (pktlen_remaining > 0) do
-		local cmd_name = tvbuf:range(pos + 4, 4):string()
+		cmd_name = tvbuf:range(pos + 4, 4):string()
 		local cmd_length = tvbuf:range(pos, 2):uint()
 		
 		local cmd_label = cmd_labels[cmd_name]
@@ -2438,7 +2439,12 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 		
 		cmd_count = cmd_count + 1
 	end
-	  pktinfo.cols.info:set("(".. packet_type ..", ".. cmd_count .." CMDs, Len ".. packet_length ..")")
+		if cmd_count == 1 then
+			packet_type = "Command"
+			pktinfo.cols.info:set("(".. packet_type .." ".. cmd_name ..", Len ".. packet_length ..")")
+		else
+			pktinfo.cols.info:set("(".. cmd_count .." ".. packet_type ..", Len ".. packet_length ..")")
+		end
 	else 
 	  if tvbuf:range(0,1):bitfield(0, 1) == 1 then
 		packet_type = "ACK"
