@@ -761,6 +761,27 @@ pf_fields["pf_cmd_lkst_state"]      = ProtoField.new  ("State", "atem.cmd.lkst.s
 pf_fields["pf_cmd_incm_state1"]     = ProtoField.new  ("State 1", "atem.cmd.incm.state1", ftypes.UINT8, nil, base.DEC)
 pf_fields["pf_cmd_incm_state2"]     = ProtoField.new  ("State 2", "atem.cmd.incm.state2", ftypes.UINT8, nil, base.DEC)
 
+pf_fields["pf_cmd_ftsd_id"]         = ProtoField.new  ("Transfer ID", "atem.cmd.ftsd.id", ftypes.UINT16, nil, base.DEC)
+pf_fields["pf_cmd_ftsd_storeId"]    = ProtoField.new  ("Transfer Store ID", "atem.cmd.ftsd.storeId", ftypes.UINT8, nil, base.DEC)
+pf_fields["pf_cmd_ftsd_index"]      = ProtoField.new  ("Transfer Index", "atem.cmd.ftsd.index", ftypes.UINT8, nil, base.DEC)
+pf_fields["pf_cmd_ftsd_size"]       = ProtoField.new  ("Size", "atem.cmd.ftsd.size", ftypes.UINT16, nil, base.DEC)
+
+VALS["VALS_FTSD_OP"] = {[1] = "Write", [2] = "Clear"}
+pf_fields["pf_cmd_ftsd_op"]         = ProtoField.new  ("Operationg", "atem.cmd.ftsd.op", ftypes.UINT8, VALS["VALS_FTSD_OP"], base.DEC)
+
+pf_fields["pf_cmd_ftcd_id"]         = ProtoField.new  ("Transfer ID", "atem.cmd.ftcd.id", ftypes.UINT16, nil, base.DEC)
+pf_fields["pf_cmd_ftcd_count"]      = ProtoField.new  ("Count", "atem.cmd.ftcd.count", ftypes.UINT8, nil, base.DEC)
+
+pf_fields["pf_cmd_ftda_id"]         = ProtoField.new  ("Transfer ID", "atem.cmd.ftda.id", ftypes.UINT16, nil, base.DEC)
+pf_fields["pf_cmd_ftda_size"]       = ProtoField.new  ("Size", "atem.cmd.ftda.size", ftypes.UINT16, nil, base.DEC)
+pf_fields["pf_cmd_ftda_data"]       = ProtoField.new  ("Data", "atem.cmd.ftda.size", ftypes.BYTES)
+
+pf_fields["pf_cmd_ftsu_id"]         = ProtoField.new  ("Transfer ID", "atem.cmd.ftsu.id", ftypes.UINT16, nil, base.DEC)
+pf_fields["pf_cmd_ftsu_storeId"]    = ProtoField.new  ("Transfer Store ID", "atem.cmd.ftsu.storeId", ftypes.UINT8, nil, base.DEC)
+pf_fields["pf_cmd_ftsu_index"]      = ProtoField.new  ("Transfer Index", "atem.cmd.ftsu.index", ftypes.UINT8, nil, base.DEC)
+
+pf_fields["pf_cmd_ftua_id"]         = ProtoField.new  ("Transfer ID", "atem.cmd.ftua.id", ftypes.UINT16, nil, base.DEC)
+pf_fields["pf_cmd_ftua_index"]      = ProtoField.new  ("Transfer Index", "atem.cmd.ftua.index", ftypes.UINT8, nil, base.DEC)
 
 
 local cmd_labels = {}
@@ -890,8 +911,13 @@ cmd_labels["LOCK"] = "Set Lock State"
 cmd_labels["LKOB"] = "Lock State Changed"
 cmd_labels["LKST"] = "Media Lock State Changed"
 cmd_labels["InCm"] = "Initialization Completed"
-cmd_labels["SRsv"] = "Save Settings"
-cmd_labels["SRcl"] = "Clear Settings"
+cmd_labels["FTSD"] = "Data Transfer to Switcher"
+cmd_labels["FTFD"] = "Data File Description"
+cmd_labels["FTDC"] = "Data Transfer Completed"
+cmd_labels["FTSU"] = "Data Transfer Request"
+cmd_labels["FTDa"] = "Data Transfer"
+cmd_labels["FTUA"] = "Data Transfer Ack"
+cmd_labels["FTDE"] = "Data Transfer Error"
 
 
 ----------------------------------------
@@ -906,7 +932,12 @@ atem_proto.fields = {
   , pf_fields["pf_cmd_lokb_storeId"], pf_fields["pf_cmd_lock_storeId"], pf_fields["pf_cmd_lock_state"]
   , pf_fields["pf_cmd_lkst_mediaId"], pf_fields["pf_cmd_lkst_state"]
   , pf_fields["pf_cmd_incm_state1"], pf_fields["pf_cmd_incm_state2"]
-}
+  , pf_fields["pf_cmd_ftsd_id"], pf_fields["pf_cmd_ftsd_storeId"], pf_fields["pf_cmd_ftsd_index"], pf_fields["pf_cmd_ftsd_size"], pf_fields["pf_cmd_ftsd_op"]
+  , pf_fields["pf_cmd_ftcd_id"], pf_fields["pf_cmd_ftcd_count"]  
+  , pf_fields["pf_cmd_ftda_id"], pf_fields["pf_cmd_ftda_size"], pf_fields["pf_cmd_ftda_data"]
+  , pf_fields["pf_cmd_ftsu_id"], pf_fields["pf_cmd_ftsu_storeId"], pf_fields["pf_cmd_ftsu_index"]
+  , pf_fields["pf_cmd_ftua_id"], pf_fields["pf_cmd_ftua_index"]
+  }
 
 ----------------------------------------
 -- we don't just want to display our protocol's fields, we want to access the value of some of them too!
@@ -2379,6 +2410,26 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 		elseif (cmd_name == "InCm") then
 			cmd_tree:add(pf_fields["pf_cmd_incm_state1"], tvbuf:range(pos+8, 1))
 			cmd_tree:add(pf_fields["pf_cmd_incm_state2"], tvbuf:range(pos+9, 1))
+		elseif (cmd_name == "FTSD") then
+			cmd_tree:add(pf_fields["pf_cmd_ftsd_id"], tvbuf:range(pos+8, 2))
+			cmd_tree:add(pf_fields["pf_cmd_ftsd_storeId"], tvbuf:range(pos+10, 1))
+			cmd_tree:add(pf_fields["pf_cmd_ftsd_index"], tvbuf:range(pos+15, 1))
+			cmd_tree:add(pf_fields["pf_cmd_ftsd_size"], tvbuf:range(pos+16, 4))
+			cmd_tree:add(pf_fields["pf_cmd_ftsd_op"], tvbuf:range(pos+20, 1))
+		elseif (cmd_name == "FTCD") then
+			cmd_tree:add(pf_fields["pf_cmd_ftcd_id"], tvbuf:range(pos+8, 2))
+			cmd_tree:add(pf_fields["pf_cmd_ftcd_count"], tvbuf:range(pos+10, 1))
+		elseif (cmd_name == "FTDa") then
+			cmd_tree:add(pf_fields["pf_cmd_ftda_id"], tvbuf:range(pos+8, 2))
+			cmd_tree:add(pf_fields["pf_cmd_ftda_size"], tvbuf:range(pos+10, 2))
+			cmd_tree:add(pf_fields["pf_cmd_ftda_data"], tvbuf:range(pos+12, tvbuf:range(pos+10, 2):uint()))
+		elseif (cmd_name == "FTSU") then
+			cmd_tree:add(pf_fields["pf_cmd_ftsu_id"], tvbuf:range(pos+8, 2))
+			cmd_tree:add(pf_fields["pf_cmd_ftsu_storeId"], tvbuf:range(pos+10, 1))
+			cmd_tree:add(pf_fields["pf_cmd_ftsu_index"], tvbuf:range(pos+15, 1))
+		elseif (cmd_name == "FTUA") then
+			cmd_tree:add(pf_fields["pf_cmd_ftua_id"], tvbuf:range(pos+8, 2))
+			cmd_tree:add(pf_fields["pf_cmd_ftua_index"], tvbuf:range(pos+11, 1))
 		else
 		end
 		
