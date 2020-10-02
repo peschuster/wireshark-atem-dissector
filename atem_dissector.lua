@@ -2240,6 +2240,7 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 			cmd_tree:add(pf_fields["pf_field_clip"], tvbuf:range(pos+16, 2))
 			cmd_tree:add(pf_fields["pf_field_gain0"], tvbuf:range(pos+18, 2))
 			cmd_tree:add(pf_fields["pf_field_invertkey0"], tvbuf:range(pos+20, 1))
+			cmd_tree:add(pf_fields["pf_field_unknown1"], tvbuf:range(pos+21, 3))
 		elseif (cmd_name == "SSBd") then
 			cmd_tree:add(pf_fields["pf_field_ssrc_id"], tvbuf:range(pos+8, 1))
 			cmd_tree:add(pf_fields["pf_field_borderenabled"], tvbuf:range(pos+9, 1))
