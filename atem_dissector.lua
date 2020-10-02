@@ -2233,6 +2233,7 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 			cmd_tree:add(pf_fields["pf_field_index0"], tvbuf:range(pos+10, 2))
 		elseif (cmd_name == "SSrc") then
 			cmd_tree:add(pf_fields["pf_field_ssrc_id"], tvbuf:range(pos+8, 1))
+			cmd_tree:add(pf_fields["pf_field_unknown1"], tvbuf:range(pos+9, 1))
 			cmd_tree:add(pf_fields["pf_field_fillsource"], tvbuf:range(pos+10, 2))
 			cmd_tree:add(pf_fields["pf_field_keysource"], tvbuf:range(pos+12, 2))
 			cmd_tree:add(pf_fields["pf_field_foreground"], tvbuf:range(pos+14, 1))
