@@ -2256,7 +2256,7 @@ function atem_proto.dissector(tvbuf,pktinfo,root)
 			cmd_tree:add(pf_fields["pf_field_borderluma"], tvbuf:range(pos+24, 2))
 			cmd_tree:add(pf_fields["pf_field_lightsourcedirection"], tvbuf:range(pos+26, 2))
 			cmd_tree:add(pf_fields["pf_field_lightsourcealtitude"], tvbuf:range(pos+28, 1))
-			cmd_tree:add(pf_fields["pf_field_unknown1"], tvbuf:range(pos+29, 1))
+			cmd_tree:add(pf_fields["pf_field_unknown1"], tvbuf:range(pos+29, 3))
 		elseif (cmd_name == "CSSc") then
 			local cmd_cssc_setmask22_tree = cmd_tree:add(pf_fields["pf_cmd_cssc_setmask22"], tvbuf:range(pos+8, 1))
 			cmd_cssc_setmask22_tree:add(pf_fields["pf_flag_cmd_cssc_setmask22_fillsource"], tvbuf:range(pos+8, 1))
